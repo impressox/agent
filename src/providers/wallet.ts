@@ -75,7 +75,7 @@ export class WalletProvider {
 
     getPublicClient(
         chainName: SupportedChain
-    ): PublicClient {
+    ): PublicClient<HttpTransport, Chain, Account | undefined> {
         const transport = this.createHttpTransport(chainName);
 
         const publicClient = createPublicClient({

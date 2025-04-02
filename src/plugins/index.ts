@@ -8,6 +8,7 @@ import type { Plugin } from "@elizaos/core";
 import { bridgeAction } from "../actions/bridge.ts";
 import { swapAction } from "../actions/swap.ts";
 import { transferAction } from "../actions/transfer.ts";
+import { walletInfoAction } from "../actions/wallet-info.ts";
 import { evmWalletProvider } from "../providers/wallet.ts";
 
 export const espressoxPlugin: Plugin = {
@@ -16,7 +17,7 @@ export const espressoxPlugin: Plugin = {
   providers: [evmWalletProvider],
   evaluators: [],
   services: [],
-  actions: [transferAction, bridgeAction, swapAction],
+  actions: [transferAction, bridgeAction, swapAction, walletInfoAction],
 };
 
 export default espressoxPlugin;

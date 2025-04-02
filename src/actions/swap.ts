@@ -22,7 +22,8 @@ export { swapTemplate };
 // Add token mapping for common tokens
 const TOKEN_ADDRESSES: Record<string, Record<string, `0x${string}`>> = {
     arbitrum: {
-        ETH: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        ETH: "0x0000000000000000000000000000000000000000",
+        WETH: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
         USDC: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         USDT: "0xfadfd7c7bcdbfc5fe26a5c9ab5d5b22a0c6d1c1"
     },
@@ -123,6 +124,11 @@ export class SwapAction {
         const fromTokenDecimals = await this.getTokenDecimals(params.chain, fromTokenAddress);
 
         try {
+            let balance = await this.walletProvider.getBalanceForChainAndToken(params.chain, fromTokenAddress, fromTokenDecimals);;
+
+            if (parseUnits(balance, fromTokenDecimals) < parseUnits(params.amount, fromTokenDecimals)) {
+                throw new Error(`Insufficient balance. Please deposit funds to address ${this.walletProvider.getAddress()} to continue the transaction.`);
+            }
             const chain = this.walletProvider.getChainConfigs(params.chain);
             // Get quote from Relay
             const quote = await getClient()?.actions.getQuote({

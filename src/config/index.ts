@@ -93,11 +93,11 @@ export function getTokenForProvider(
       );
     case ModelProviderName.GROK:
       return character.settings?.secrets?.GROK_API_KEY || settings.GROK_API_KEY;
+    case ModelProviderName.DEEPSEEK:
+      return character.settings?.secrets?.DEEPSEEK_API_KEY || settings.DEEPSEEK_API_KEY
     case ModelProviderName.HEURIST:
       return (
         character.settings?.secrets?.HEURIST_API_KEY || settings.HEURIST_API_KEY
       );
-    case ModelProviderName.GROQ:
-      return character.settings?.secrets?.GROQ_API_KEY || settings.GROQ_API_KEY;
   }
 }
