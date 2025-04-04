@@ -1,3 +1,97 @@
+export const walletInfoTemplate = `You are an AI assistant specialized in retrieving blockchain wallet information.
+
+First, review the recent user messages:
+
+<recent_messages>
+{{recentMessages}}
+</recent_messages>
+
+Here is a list of supported chains:
+<supported_chains>
+{{supportedChains}}
+</supported_chains>
+
+Your task is to determine the blockchain network (chain) from the user message, if specified. If not explicitly mentioned, default to "arbitrum".
+
+Extract and return the chain in the following JSON format:
+
+\`\`\`json
+{
+  "chain": "ethereum" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx"
+}
+\`\`\`
+`;
+
+export const swapTemplate = `Given the recent messages and wallet information below:
+
+{{recentMessages}}
+
+{{walletInfo}}
+
+Here's a list of supported chains:
+<supported_chains>
+{{supportedChains}}
+</supported_chains>
+
+Extract the following information about the requested token swap:
+- fromToken: Input token symbol or address (the token being sold)
+- toToken: Output token symbol or address (the token being bought)
+- Amount to swap: Must be a string representing the amount in ether (only number without coin symbol, e.g., "0.1")
+- FromChain: The chain the swap is initiated from (must be one of the supported chains)
+- ToChain: The destination chain (optional, default to fromChain if not cross-chain)
+- ToAddress: Recipient address (optional, must be a valid Ethereum address)
+
+Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined:
+
+\`\`\`json
+{
+    "fromToken": string | null,
+    "toToken": string | null,
+    "amount": string | null,
+    "fromChain": "ethereum" | "abstract" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx" | null,
+    "toChain": "ethereum" | "abstract" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx" | null,
+    "toAddress": string | null
+}
+\`\`\`
+`;
+
+export const quoteTemplate = `You are an AI assistant specialized in processing token swap quote requests. Your task is to extract structured information to retrieve a swap quote.
+
+First, review the conversation history and wallet context:
+
+<recent_messages>
+{{recentMessages}}
+</recent_messages>
+
+<wallet_info>
+{{walletInfo}}
+</wallet_info>
+
+List of supported chains:
+<supported_chains>
+{{supportedChains}}
+</supported_chains>
+
+Your goal is to extract the following information:
+- fromChain: The chain the swap is initiated from (must be one of the supported chains)
+- toChain: The destination chain (optional, default to fromChain if not cross-chain)
+- fromToken: Symbol or address of the token being sold
+- toToken: Symbol or address of the token being bought
+- amount: The amount of the input token to swap, must be a string representing a number without any symbol (e.g., "1.5")
+
+Return the information in the following JSON format. Use null for any values that cannot be determined:
+
+\`\`\`json
+{
+  "fromChain": "ethereum" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx" | null,
+  "toChain": "ethereum" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx" | null,
+  "fromToken": string | null,
+  "toToken": string | null,
+  "amount": string | null
+}
+\`\`\`
+`;
+
 export const transferTemplate = `You are an AI assistant specialized in processing cryptocurrency transfer requests. Your task is to extract specific information from user messages and format it into a structured JSON response.
 
 First, review the recent messages from the conversation:
@@ -55,62 +149,6 @@ Remember:
 - If no specific token is mentioned (i.e., it's a native token transfer), set the "token" field to null.
 
 Now, process the user's request and provide your response.
-`;
-
-export const bridgeTemplate = `Given the recent messages and wallet information below:
-
-{{recentMessages}}
-
-{{walletInfo}}
-
-Extract the following information about the requested token bridge:
-- Token symbol or address to bridge
-- Source chain
-- Destination chain
-- Amount to bridge: Must be a string representing the amount in ether (only number without coin symbol, e.g., "0.1")
-- Destination address (if specified)
-
-Respond with a JSON markdown block containing only the extracted values:
-
-\`\`\`json
-{
-    "token": string | null,
-    "fromChain": "ethereum" | "abstract" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "fraxtal" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx" | "gravity" | null,
-    "toChain": "ethereum" | "abstract" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "fraxtal" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx" | "gravity" |  null,
-    "amount": string | null,
-    "toAddress": string | null
-}
-\`\`\`
-`;
-
-export const swapTemplate = `Given the recent messages and wallet information below:
-
-{{recentMessages}}
-
-{{walletInfo}}
-
-Extract the following information about the requested token swap:
-- Input token symbol or address (the token being sold)
-- Output token symbol or address (the token being bought)
-- Amount to swap: Must be a string representing the amount in ether (only number without coin symbol, e.g., "0.1")
-- Chain to execute on
-
-Check the balance of the input token on the chain to execute on. If the balance is less than the amount to swap, return an error message.
-
-Current only support chains:
-- Arbitrum Sepolia
-
-Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined:
-
-\`\`\`json
-{
-    "inputToken": string | null,
-    "outputToken": string | null,
-    "amount": string | null,
-    "chain": "ethereum" | "abstract" | "base" | "sepolia" | "bsc" | "arbitrum" | "arbitrumSepolia" | "avalanche" | "polygon" | "optimism" | "cronos" | "gnosis" | "fantom" | "klaytn" | "celo" | "moonbeam" | "aurora" | "harmonyOne" | "moonriver" | "arbitrumNova" | "mantle" | "linea" | "scroll" | "filecoin" | "taiko" | "zksync" | "canto" | "alienx" | null,
-    "slippage": number | null
-}
-\`\`\`
 `;
 
 export const proposeTemplate = `Given the recent messages and wallet information below:

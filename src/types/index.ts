@@ -25,6 +25,8 @@ export interface Transaction {
     data?: `0x${string}`;
     chainId?: number;
     logs?: Log[];
+    fromChain?: string | null;
+    toChain?: string | null;
 }
 
 // Token types
@@ -72,11 +74,12 @@ export interface TransferParams {
 }
 
 export interface SwapParams {
-    chain: SupportedChain;
+    fromChain: SupportedChain;
+    toChain: SupportedChain;
     fromToken: Address;
     toToken: Address;
     amount: string;
-    slippage?: number;
+    toAddress?: Address;
 }
 
 export interface BebopRoute {
@@ -90,21 +93,12 @@ export interface BebopRoute {
     gasPrice: string;
 }
 
-export interface SwapQuote {
-    aggregator: "lifi" | "bebop";
-    minOutputAmount: string;
-    swapData: Route | BebopRoute;
-}
-
-export interface BridgeParams {
+export interface QuoteParams {
     fromChain: SupportedChain;
     toChain: SupportedChain;
     fromToken: Address;
     toToken: Address;
-    amount: string;
-    toAddress?: Address;
 }
-
 // Plugin configuration
 export interface EvmPluginConfig {
     rpcUrl?: {
@@ -229,4 +223,33 @@ export interface UserWallet {
     address: Address;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export type OperationType = 'swap' | 'bridge' | 'cross-chain-swap';
+
+export interface TransactionResponse {
+    success: boolean;
+    hash: string;
+    recipient: string;
+    fromChain: string;
+    toChain: string;
+    operationType: OperationType;
+}
+
+// Relay SDK types
+export interface QuoteResponse {
+    route: {
+        steps: Array<{
+            action: string;
+            description: string;
+            fromToken: string;
+            toToken: string;
+            fromAmount: string;
+            toAmount: string;
+            fromChain: string;
+            toChain: string;
+        }>;
+    };
+    estimatedGas: string;
+    totalSteps: number;
 }
